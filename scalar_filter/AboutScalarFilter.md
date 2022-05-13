@@ -35,6 +35,8 @@ The basic idea is to estimate the state of a system with measurements of it and 
 
 There is a formula associated with each of the three steps.
 
-1. $K = \frac{P}{P + R}$
-2. $x_k = x_{k-1} + K * (z - x_{k-1})$
-3. $P_k = (1 - K) * P_{k-1}$
+`K = P / (P + R)`
+
+`x_k = x_k-1 + K * (z - x_k-1)`
+
+`P_k = (1 - K) * P_k-1`
