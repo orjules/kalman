@@ -27,7 +27,7 @@ Note that K, P and R are uppercase, because they will later be matrices. For now
 - K: Kalman Gain
 - P: Process uncertainty
 - R: Measurement uncertainty
-- k: running sample number (written like function because subscript might not render)
+- k: running sample number (written as subscript with P_k or P_k-1 for previous sample)
 
 The basic idea is to estimate the state of a system with measurements of it and the uncertainty of these measurements.
 
@@ -35,8 +35,6 @@ The basic idea is to estimate the state of a system with measurements of it and 
 
 There is a formula associated with each of the three steps.
 
-`K = P / (P + R)`
-
-`x_k = x_k-1 + K * (z - x_k-1)`
-
-`P_k = (1 - K) * P_k-1`
+1. `K = P / (P + R)`
+2. `x_k = x_k-1 + K * (z - x_k-1)`
+3. `P_k = (1 - K) * P_k-1`
