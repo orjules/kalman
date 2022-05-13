@@ -16,5 +16,25 @@ During this process I will write my learned lessons in this document to referenc
 Because I want to learn rust, this first implementation will be written in it.
 To visualize the behavior I will use R to plot it.
 
-## Theory
+## Theory 
 
+First some notation has to established.
+The following notation is an amalgamation of the aforementioned YouTube videos and one of my University courses.
+Note that K, P and R are uppercase, because they will later be matrices. For now everything is a scalar value.
+
+- x: State
+- z: Measurement 
+- K: Kalman Gain
+- P: Process uncertainty
+- R: Measurement uncertainty
+- k: running sample number (written like function because subscript might not render)
+
+The basic idea is to estimate the state of a system with measurements of it and the uncertainty of these measurements.
+
+(Image of block plan)
+
+There is a formula associated with each of the three steps.
+
+1. $K = \frac{P}{P + R}$
+2. $x_k = x_{k-1} + K * (z - x_{k-1})$
+3. $P_k = (1 - K) * P_{k-1}$
