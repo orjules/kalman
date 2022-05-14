@@ -38,3 +38,22 @@ There is a formula associated with each of the three steps.
 1. `K = P / (P + R)`
 2. `x_k = x_k-1 + K * (z - x_k-1)`
 3. `P_k = (1 - K) * P_k-1`
+
+## Running the simulation
+
+1. Change `x`, `p`, `r` (and maybe `iterations`) in `scalar_filter_rust/src/main.rs` as you want
+2. Run `cargo run > ../plotting/rust_out.txt` in the directory `scalar_filter_rust` from the terminal
+3. Run the R script `plotting/scalarKalman.r` to get a resulting png
+
+## Lessons learned
+
+There are 3 initial parameters which impact the behavior of the estimate:
+- `x` the initial estimate of the true value
+- `p` the uncertainty of the estimate
+- `r` the uncertainty of the measurement
+
+`x` does not have much impact on the behavior. If it is set to exactly the true value it might deviate for a few steps. If it is set far away, it quickly converges on the true value. How quickly is determined by `p` and `r`.
+
+`p` ...
+
+`r` ...

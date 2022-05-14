@@ -7,14 +7,15 @@ fn main() {
     println!("Iteration, Real, Estimate, Est_Uncert, Gain, Measurement, Meas_Uncert");
 
     // Initial values
-    let mut x:f64 = 18.0;
-    let mut p:f64 = 10.0;
-    let r:f64 = 2.5;
+    let iterations = 61;
+    let mut x:f64 = 15.0;
+    let mut p:f64 = 3.0;
+    let r:f64 = 3.0;
     let normal = Normal::new(real_temp, r).unwrap();
     let mut rng = thread_rng();
     println!("{}, {}, {}, {}, {}, {}, {}", 0, real_temp, x, p, 0.0, 0.0, r);
 
-    for n in 1..61 {
+    for n in 1..iterations {
         let k = get_kalman_gain(p, r);
         let z = normal.sample(&mut rng);
         x = get_updated_state(x, k, z);
