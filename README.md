@@ -10,7 +10,7 @@ Because this is very ambitious and complex I decided to write out some subgoals 
 
 ## Roadmap
 
-1. Implement scalar kalman filter
+1. Implement [scalar kalman filter](./scalar_filter/AboutScalarFilter.md) - done
     - The example I found online was of a temperate reading with some uncertainty
     - This removes all complexity of matrix math and simply shows the underlying principles
     - This first implementation will be done in rust since I am currently learning it
