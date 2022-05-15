@@ -29,9 +29,10 @@ Note that K, P and R are uppercase, because they will later be matrices. For now
 - R: Measurement uncertainty
 - k: running sample number (written as subscript with P_k or P_k-1 for previous sample)
 
-The basic idea is to estimate the state of a system with measurements of it and the uncertainty of these measurements.
+The basic idea is to estimate the state of a system with measurements of it and the uncertainty of these measurements. 
+What is missing from this very simple temperature example is something like the control input `u` which would necessitate a prediction and a correction step. Here only correction is needed.
 
-(Image of block plan)
+![](./images/BlockSchaltBild.jpeg)
 
 There is a formula associated with each of the three steps.
 
@@ -54,6 +55,13 @@ There are 3 initial parameters which impact the behavior of the estimate:
 
 `x` does not have much impact on the behavior. If it is set to exactly the true value it might deviate for a few steps. If it is set far away, it quickly converges on the true value. How quickly is determined by `p` and `r`.
 
-`p` ...
+`p` impacts the reliance on the initial guess. 
+A low `p` means a slow change from the initial guess because it does not follow the measurement heavily. This is good if the initial guess is close to the real value.
+A high `p` means a faster change, which often leads to overshoots. 
+In general a higher `p` is preferable. From testing with the simulation, it seems that a `p` at least as high as the `r` converges quickly
 
-`r` ...
+`r` has the most impact, since it is what needs to be compensated. A high `r` takes more steps to converge and is less stable in general. Since `r` can not be chosen, but only measured, this is mostly to say, that less noisy sensors are better.
+
+Here is an example of a plot:
+
+![](./images/plot.png)

@@ -4,6 +4,11 @@ data <- read.table(
     sep = ",",
     dec = ".")
 
+png(
+    filename =
+    "~/Documents/STAR/Kalman Filter/kalman/scalar_filter/images/plot.png"
+)
+
 plot(
     data$Iteration, data$Estimate,
     col = "red",
@@ -12,7 +17,7 @@ plot(
     xlab = "Iteration",
     ylab = "Temperature",
     main = "Kalman Filter simulation",
-    sub = sprintf("Initial uncertainty: %2.0f, Measurement Uncertainty: %1.1f",
+    sub = sprintf("Initial uncertainty: %2.1f, Measurement Uncertainty: %2.1f",
             data[1, "Est_Uncert"],
             data[1, "Meas_Uncert"])
 )
@@ -25,3 +30,5 @@ legend("top",
         legend = c("Estimate", "Measurement", "Real Temperature"),
         col = c("red", "blue", "black"),
         pch = c(1, 1, 1))
+
+dev.off()

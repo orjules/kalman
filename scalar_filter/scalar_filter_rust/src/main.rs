@@ -8,8 +8,8 @@ fn main() {
 
     // Initial values
     let iterations = 61;
-    let mut x:f64 = 15.0;
-    let mut p:f64 = 3.0;
+    let mut x:f64 = 18.0;
+    let mut p:f64 = 5.0;
     let r:f64 = 3.0;
     let normal = Normal::new(real_temp, r).unwrap();
     let mut rng = thread_rng();
