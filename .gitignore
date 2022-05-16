@@ -2,4 +2,5 @@
 
 .vscode/
 scalar_filter/scalar_filter_rust/target/
-scalar_filter/.DS_Store
+*/.DS_Store
+*/*/.DS_Store
