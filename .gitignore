@@ -4,3 +4,5 @@
 scalar_filter/scalar_filter_rust/target/
 */.DS_Store
 */*/.DS_Store
+
+simple_matrix_filter/c_code/target/

@@ -38,4 +38,11 @@ Notation:
 
 ## Running the simulation
 
+First you need to build the c code.
+For this run `cmake -S . -B target/` in the `c_code` directory.
+Afterwards go into the `target` directory and run `make`.
+Now you have the executable named `SimpleMatrixFilter`.
+
+TODO: Write shell script to make this easier.
+
 ## Lessons learned
