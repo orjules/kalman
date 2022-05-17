@@ -48,6 +48,13 @@ Matrix<2,1> calculate_KalmanGain(Matrix<2,2> P, Matrix<1,2> H, Matrix<1,1> R){
     return K;
 }
 
+Matrix<2,1> correct_state(Matrix<2,1> pred_x, Matrix<2,1> gain, Matrix<1,1> measurement, Matrix<1,2> H){
+    Matrix<1,1> diff = measurement - H * pred_x;
+    printf("Diff is %f\n", diff(0));
+    Matrix<2,1> x = pred_x + gain * diff;
+    return x;
+}
+
 int main (int argc, char *argv[]){
     // Set initial values
     Matrix<2,1> x; // state
@@ -60,26 +67,31 @@ int main (int argc, char *argv[]){
     Matrix<1,2> H; // Transforms state to measurement
     H(0) = 1;
     H(1) = 0;
+    Matrix<1,1> z; // measurement
     Matrix<1,1> R; // measurement uncertainty
     R(0) = 1; // meter 
 
     // Setup random number generator
     std::default_random_engine rng;
-    std::normal_distribution<float> time_variation(1.0,0.5);
-    std::normal_distribution<float> measurement_variation(0.0,R(0));
+    std::normal_distribution<float> rand_time(1.0,0.5);
+    std::normal_distribution<float> rand_measurement(0.0,R(0));
 
-    for (int i = 0; i < 1; i++){
-        float delta_t = time_variation(rng);
+    for (int i = 0; i < 2; i++){
+        float delta_t = rand_time(rng);
+        printf("Time: %f\n", delta_t);
         Matrix<2,2> A = get_A_Matrix(delta_t);
         // Prediction Step
         x = predict_state(x, A, delta_t);
         P = predict_uncertainty(P, A);
 
         // Calculate measurement
-        float z = x(0) + measurement_variation(rng); // value from sensor
+        z(0) = x(0) + rand_measurement(rng); // value from sensor
+        printf("Measure rand: %f\n", rand_measurement(rng));
         // Correction Step
         Matrix<2,1> K = calculate_KalmanGain(P, H, R);
-        // TODO calculate x
+        x = correct_state(x, K, z, H);
+        printf("after:\n");
+        print_2by1(x);
         // TODO calculate P
     }    
 }
