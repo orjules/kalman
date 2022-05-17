@@ -59,6 +59,10 @@ Matrix<2,2> correct_uncertainty(Matrix<2,2> pred_P, Matrix<2,1> gain, Matrix<1,2
     return P;
 }
 
+void print_row(Matrix<2,1> x, float time, float measured, float error, float uncertainty){
+    printf("%f, %f, %f, %f, %f\n", time, x(0), measured, error, uncertainty);
+}
+
 int main (int argc, char *argv[]){
     // Set initial values
     Matrix<2,1> x; // state
@@ -72,33 +76,40 @@ int main (int argc, char *argv[]){
     H(0) = 1;
     H(1) = 0;
     Matrix<1,1> z; // measurement
+    float initial_uncertainty = 5.0;
     Matrix<1,1> R; // measurement uncertainty
-    R(0) = 1; // meter 
+    R(0) = initial_uncertainty; // meter 
 
     // Setup random number generator
     std::default_random_engine rng;
-    std::normal_distribution<float> rand_time(0.3,0.1);
-    std::normal_distribution<float> rand_measurement(0.0,R(0));
+    std::normal_distribution<float> rand_time(0.01,0.005);
+    float measurement_error = 1.0;
+    std::normal_distribution<float> rand_measurement(0.0,measurement_error);
 
-    for (int i = 0; i < 10; i++){
+    printf("Time, Height, Measured, MeasurementError, InitialUncertainty\n");
+    float time = 0;
+
+    for (int i = 0; i < 1000; i++){
         float delta_t = rand_time(rng);
-
-        printf("Time: %f\n", delta_t);       
-        printf("State:\n");
-        print_2by1(x);
-        printf("Uncertainty:\n");
-        print_2by2(P);
-
         Matrix<2,2> A = get_A_Matrix(delta_t);
+
         // Prediction Step
         x = predict_state(x, A, delta_t);
         P = predict_uncertainty(P, A);
 
         // Calculate measurement
         z(0) = x(0) + rand_measurement(rng); // value from sensor
+        
+        time += delta_t;
+        print_row(x, time, z(0), measurement_error, initial_uncertainty);
+
         // Correction Step
         Matrix<2,1> K = calculate_KalmanGain(P, H, R);
         x = correct_state(x, K, z, H);
         P = correct_uncertainty(P, K, H);
+
+        if (x(0) < 0){
+            break;
+        }
     }    
 }

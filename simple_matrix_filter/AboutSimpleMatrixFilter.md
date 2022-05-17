@@ -40,9 +40,18 @@ Notation:
 
 First you need to build the c code.
 For this run `cmake -S . -B target/` in the `c_code` directory.
+(This step is only necessary once)
 Afterwards go into the `target` directory and run `make`.
 Now you have the executable named `SimpleMatrixFilter`.
 
-TODO: Write shell script to make this easier.
+To execute the c code run `./SimpleMatrixFilter > ../../plotting/c_out.txt` inside of the `target` directory, to generate the output.
+Now the output is in `c_out.txt` from where the `matrixKalman.r` script can use it to draw a plot.
 
 ## Lessons learned
+
+The most important thing I saw was that the expected measurement uncertainty should be higher that the actual measurement error. At least in this example.
+
+![](images/plot_low_uncertainty.png)
+![](images/plot_high_uncertainty.png)
+
+A higher uncertainty means a smoother graph, but also a slower reaction. This is probably something that needs to be tested with real sensors.
