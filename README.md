@@ -13,11 +13,11 @@ Because this is very ambitious and complex I decided to write out some subgoals 
 1. Implement [scalar kalman filter](./scalar_filter/AboutScalarFilter.md) - done
     - The example I found online was of a temperate reading with some uncertainty
     - This removes all complexity of matrix math and simply shows the underlying principles
-    - This first implementation will be done in rust since I am currently learning it
-2. Implement simple matrix filter
-    - The example from one of my courses is a car moving along a straight road with uncertain GPS position readings
+    - This first implementation was done in rust since I was learning it at that point
+2. Implement [simple matrix filter](./simple_matrix_filter/AboutSimpleMatrixFilter.md) - done
+    - The example from one of my courses is an object falling in one dimension
     - This includes some 2x2 matrices because position and velocity will be important
-    - For the language I might stick with rust or switch to c++, dependant on the ease of matrix math in either language
+    - For the language I changed over to c++ because there is a useful library for matrix operations
 3. Implement filter for 2D problem
     - The example here is not yet decided, but it should include rotation and acceleration in 2D
     - Since orientation in 3D uses complex matrices or 4D numbers I want to limit the problem 

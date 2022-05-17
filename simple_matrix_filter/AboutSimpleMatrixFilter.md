@@ -36,6 +36,14 @@ Notation:
 
 ## Implementation
 
+I left out the `w` and `Q` since I frankly don't fully understand what it does. 
+
+I had to alter the library for basic linear algebra because it was made for Arduino. I mostly just commented out all references to Arduino and everything that uses it. This was mostly just things related to the serial monitor output of matrices.
+
+One minor problem I had, is that the clang compiler on mac does not support the `auto` keyword of which the library makes use. Everything compiles but I can't use the syntax of `A = {1,2,3,4}` to fill a matrix with values. This is probably related but not necessarily.
+
+My code in the `main.cpp` has a lot of comments because the mathematical notation with single letters is not easily readable.
+
 ## Running the simulation
 
 First you need to build the c code.
@@ -55,3 +63,7 @@ The most important thing I saw was that the expected measurement uncertainty sho
 ![](images/plot_high_uncertainty.png)
 
 A higher uncertainty means a smoother graph, but also a slower reaction. This is probably something that needs to be tested with real sensors.
+
+Another lesson I learned is that the mathematical notation with single letters is not very easy to read. So in future implementations I will write them out to make things clearer.
+
+Lastly I learned that the basic linear algebra library is very useful.

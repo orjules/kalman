@@ -6,17 +6,6 @@
 
 using namespace BLA;
 
-
-void print_2by1(Matrix<2,1> matrix){
-    printf("( %f )\n", matrix(0,0));
-    printf("( %f )\n", matrix(1,0));
-}
-
-void print_2by2(Matrix<2,2> matrix){
-    printf("( %f  %f )\n", matrix(0,0), matrix(0,1));
-    printf("( %f  %f )\n", matrix(1,0), matrix(1,1));
-}
-
 Matrix<2,2> get_A_Matrix(float delta_t){
     Matrix<2,2> A;
     A.Fill(0.0);
