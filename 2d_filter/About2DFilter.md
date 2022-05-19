@@ -56,4 +56,10 @@ With measurement error it should start to drift from the ideal path, because the
 
 ## Running the simulation
 
+First you need to build the c code.
+For this run `cmake -S . -B target/` in the `c_code` directory.
+(This step is only necessary once)
+Afterwards go into the `target` directory and run `make`.
+Now you have an executable named `2dKalmanFilter`.
+
 ## Lessons learned
