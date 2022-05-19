@@ -42,7 +42,7 @@ plot(
     col = "black",
     type = "l",
     xlab = "Time in s",
-    ylab = "Rotation speed in deg/s",
+    ylab = "Rotation speed in rad/s",
     main = "Kalman Filter simulation - Rotation speed",
     sub = sprintf("Error in measurement: %2.1f", data[1, "ErrorRot"])
 )
