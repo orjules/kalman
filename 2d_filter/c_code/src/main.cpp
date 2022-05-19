@@ -46,7 +46,8 @@ Matrix<3,1> calculate_erroneous_measurements(float time, float acc_error, float 
     normal_distribution<float> rand_rot(0.0, rot_error);
 
     z(0) = z(0) + rand_acc(rng);
-    z(1) = z(1) + rand_rot(rng);
+    z(1) = z(1) + rand_acc(rng);
+    z(2) = z(2) + rand_rot(rng);
     
     return z;
 }
