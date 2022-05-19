@@ -83,12 +83,18 @@ Matrix<8,8> get_A_matrix(float delta_t, float phi){
     return A;
 }
 
+// calculate Kalman Gain
+
 int main (int argc, char *argv[]){
     float time = 0.0;
     float delta_t = 0.1;
     float acc_measurement_error = 0.1;
     float rot_measurement_error = 0.2;
 
+    Matrix<8,1> x;
+    x.Fill(0.0);
+    Matrix<8,8> P;
+    P.Fill(0.0);
     Matrix<2,1> z_actual;
     z_actual.Fill(0.0);
     Matrix<2,1> z_erroneous;
@@ -96,13 +102,20 @@ int main (int argc, char *argv[]){
 
     printf("Time, ActualAcc, ActualRot, ErroneousAcc, ErrorAcc, ErroneousRot, ErrorRot\n");
 
-    print_8by8(get_A_matrix(delta_t, PI/2));
-    return 1;
-
     for (int i = 0; i < 101; i++){
+        // Prediction step
+        Matrix<8,8> A = get_A_matrix(delta_t, x(6));
+        x = A * x;
+        P = A * P * ~A;
+        
+        // Calculate measurements
         print_measurements(time, z_actual, z_erroneous, acc_measurement_error, rot_measurement_error);
         z_actual = calculate_actual_measurements(time);
         z_erroneous = calculate_erroneous_measurements(time, acc_measurement_error, rot_measurement_error);
+        
+        // Correction step
+        
+
         time += delta_t;
     }   
 }
