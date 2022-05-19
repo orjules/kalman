@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include <random>
-#include"../BasicLinearAlgebra-3.6/BasicLinearAlgebra.h"
+#include"../../../libraries/BasicLinearAlgebra-3.6/BasicLinearAlgebra.h"
 
 #define GRAVITY -9.81
 
