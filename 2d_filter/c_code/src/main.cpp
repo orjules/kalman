@@ -7,8 +7,8 @@ using namespace std;
 
 default_random_engine rng;
 
-void print_measurements(float time, Matrix<2,1> actual, Matrix<2,1> erroneous){
-    printf("%f, %f, %f, %f, %f\n", time, actual(0), actual(1), erroneous(0), erroneous(1));
+void print_measurements(float time, Matrix<2,1> actual, Matrix<2,1> erroneous, float acc_error, float rot_error){
+    printf("%f, %f, %f, %f, %f, %f, %f\n", time, actual(0), actual(1), erroneous(0), acc_error, erroneous(1), rot_error);
 }
 
 Matrix<2,1> calculate_actual_measurements(float time){
@@ -41,18 +41,18 @@ Matrix<2,1> calculate_erroneous_measurements(float time, float acc_error, float 
 int main (int argc, char *argv[]){
     float time = 0.0;
     float delta_t = 0.1;
-    float acc_measurement_error = 0.2;
-    float rot_measurement_error = 0.1;
+    float acc_measurement_error = 0.1;
+    float rot_measurement_error = 0.2;
 
     Matrix<2,1> z_actual;
     z_actual.Fill(0.0);
     Matrix<2,1> z_erroneous;
     z_erroneous.Fill(0.0);
 
-    printf("Time, ActualAcc, ActualRot, ErroneousAcc, ErroneousRot\n");
+    printf("Time, ActualAcc, ActualRot, ErroneousAcc, ErrorAcc, ErroneousRot, ErrorRot\n");
 
     for (int i = 0; i < 101; i++){
-        print_measurements(time, z_actual, z_erroneous);
+        print_measurements(time, z_actual, z_erroneous, acc_measurement_error, rot_measurement_error);
         z_actual = calculate_actual_measurements(time);
         z_erroneous = calculate_erroneous_measurements(time, acc_measurement_error, rot_measurement_error);
         time += delta_t;

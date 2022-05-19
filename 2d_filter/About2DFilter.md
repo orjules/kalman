@@ -62,4 +62,13 @@ For this run `cmake -S . -B target/` in the `c_code` directory.
 Afterwards go into the `target` directory and run `make`.
 Now you have an executable named `2dKalmanFilter`.
 
+Run `./2dKalmanFilter > ../../plotting/c_out.txt`.
+
 ## Lessons learned
+
+The two measurements are simulated in a ways which is plotted here:
+
+![](images/plot_acc.png)
+![](images/plot_rot.png)
+
+Note that the rotation speed actually goes down to -90, but if the plot where to show everything, the variation in the measurements around the actual value would be lost.
