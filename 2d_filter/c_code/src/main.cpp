@@ -16,8 +16,13 @@ void print_measurements(float time, Matrix<3,1> actual, Matrix<3,1> erroneous, f
 void print_8by8(Matrix<8,8> M){
     for (int i = 0; i < 8; i++){
         printf("( %f, %f, %f, %f, %f, %f, %f, %f )\n", M(i,0), M(i,1), M(i,2), M(i,3), M(i,4), M(i,5), M(i,6), M(i,7));
+    }    
+}
+
+void print_3by3(Matrix<3,3> M){
+    for (int i = 0; i < 3; i++){
+        printf("( %f, %f ,%f )\n", M(i,0), M(i,1), M(i,2));
     }
-    
 }
 
 Matrix<3,1> calculate_actual_measurements(float time){
@@ -111,7 +116,8 @@ Matrix<3,3> get_R_matrix(float error_ax, float error_ay, float error_rot){
 Matrix<8,3> calculate_Kalman_gain(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R){
     Matrix<8,3> temp = P * ~H;
     Matrix<3,3> temp2 = H * temp + R;
-    //return temp * Inverse(H);   // Does not work on mac because `auto` keyword is not supported
+    Invert(temp2);
+    return temp * temp2;
 }
 
 int main (int argc, char *argv[]){

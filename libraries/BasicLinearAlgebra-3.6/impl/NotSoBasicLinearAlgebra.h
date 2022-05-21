@@ -1,5 +1,8 @@
 #pragma once
 
+// As workaround for missing max function, might be problem for arduino
+#include <algorithm> 
+
 namespace BLA
 {
 template <typename T>
@@ -55,7 +58,7 @@ LUDecomposition<dim, MemT> LUDecompose(Matrix<dim, dim, MemT> &A)
         for (int j = 0; j < dim; ++j)
         {
             typename MemT::elem_t this_elem = fabs(A(i, j));
-            largest_elem = max(this_elem, largest_elem);
+            largest_elem = std::max(this_elem, largest_elem); // was only max before
         }
 
         // No nonzero largest element.
