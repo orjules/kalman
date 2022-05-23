@@ -10,7 +10,11 @@ using namespace std;
 default_random_engine rng;
 
 void print_measurements(float time, Matrix<3,1> actual, Matrix<3,1> erroneous, float acc_error, float rot_error){
-    printf("%f, %f, %f, %f, %f, %f, %f, %f, %f\n", time, actual(0), actual(1), actual(2), erroneous(0), erroneous(1), acc_error, erroneous(2), rot_error);
+    printf("%f, %f, %f, %f, %f, %f, %f, %f, %f", time, actual(0), actual(1), actual(2), erroneous(0), erroneous(1), acc_error, erroneous(2), rot_error);
+}
+
+void print_corrected_results(Matrix<8,1> state, Matrix<8,8> uncertainty){
+    printf(", %f, %f, %f, %f, %f\n", state(0), state(1), state(2), uncertainty(0,0), uncertainty(1,1));
 }
 
 void print_8by8(Matrix<8,8> M){
@@ -21,6 +25,12 @@ void print_8by8(Matrix<8,8> M){
 
 void print_3by3(Matrix<3,3> M){
     for (int i = 0; i < 3; i++){
+        printf("( %f, %f ,%f )\n", M(i,0), M(i,1), M(i,2));
+    }
+}
+
+void print_8by3(Matrix<8,3> M){
+    for (int i = 0; i < 8; i++){
         printf("( %f, %f ,%f )\n", M(i,0), M(i,1), M(i,2));
     }
 }
@@ -93,6 +103,21 @@ Matrix<8,8> get_A_matrix(float delta_t, float phi){
     return A;
 }
 
+Matrix<8,8> get_initial_P_matrix(){
+    Matrix<8,8> P;
+    P.Fill(0.0);    
+    P(0,0) = 1.0;
+    P(1,1) = 1.0;
+    P(2,2) = 1.0;
+    P(3,3) = 1.0;
+    P(4,4) = 1.0;
+    P(5,5) = 1.0;
+    P(6,6) = 1.0;
+    P(7,7) = 1.0;
+
+    return P;
+}
+
 Matrix<3,8> get_H_matrix(){
     Matrix<3,8> H;
     H.Fill(0.0);
@@ -128,8 +153,7 @@ int main (int argc, char *argv[]){
 
     Matrix<8,1> x;
     x.Fill(0.0);
-    Matrix<8,8> P;
-    P.Fill(0.0);
+    Matrix<8,8> P = get_initial_P_matrix();
     Matrix<3,1> z_actual;
     z_actual.Fill(0.0);
     Matrix<3,1> z_erroneous;
@@ -137,16 +161,19 @@ int main (int argc, char *argv[]){
     Matrix<3,8> H = get_H_matrix();
     Matrix<3,3> R = get_R_matrix(acc_measurement_error, acc_measurement_error, rot_measurement_error);
 
-    printf("Time, ActualAccX, ActualAccY, ActualRot, ErroneousAccX, ErroneousAccY, ErrorAcc, ErroneousRot, ErrorRot\n");
+    printf("Time, ActualAccX, ActualAccY, ActualRot, ErroneousAccX, ErroneousAccY, ErrorAcc, ErroneousRot, ErrorRot");
+    printf(", PosX, PosY, Rot, UncertX, UncertY\n");
 
     for (int i = 0; i < 101; i++){
         // Prediction step
-        Matrix<8,8> A = get_A_matrix(delta_t, x(6));
+        Matrix<8,8> A = get_A_matrix(delta_t, x(6));        
         x = A * x;
         P = A * P * ~A;
         
         // Calculate measurements
         print_measurements(time, z_actual, z_erroneous, acc_measurement_error, rot_measurement_error);
+        print_corrected_results(x, P);
+
         z_actual = calculate_actual_measurements(time);
         z_erroneous = calculate_erroneous_measurements(time, acc_measurement_error, rot_measurement_error);
         
