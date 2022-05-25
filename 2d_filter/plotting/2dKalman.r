@@ -4,6 +4,9 @@ data <- read.table(
     sep = ",",
     dec = ".")
 
+
+# Plot for acceleration
+
 png(
     filename =
     "~/Documents/STAR/Kalman Filter/kalman/2d_filter/images/plot_acc.png"
@@ -35,6 +38,8 @@ legend("topright",
 dev.off()
 
 
+# Plot for acceleration
+
 png(
     filename =
     "~/Documents/STAR/Kalman Filter/kalman/2d_filter/images/plot_rot.png"
@@ -59,4 +64,50 @@ legend("topright",
         col = c("black", "red"),
         pch = c(1, 1))
 
+dev.off()
+
+
+# Plot for path
+
+png(
+    filename =
+    "~/Documents/STAR/Kalman Filter/kalman/2d_filter/images/plot_path.png"
+)
+plot(
+    data$PosX, data$PosY,
+    ylim = range(-1:4),
+
+    col = "black",
+    type = "l",
+    xlab = "Position X in m",
+    ylab = "Position Y in m",
+    main = "Kalman Filter simulation - Path traveled",
+)
+# points(data$Time, data$ErroneousRot, col = "red")
+# arrows(data$PosY, avg-sdev, x, avg+sdev, length=0.05, angle=90, code=3)
+legend("topright",
+        inset = 0.01,
+        bty = "n",
+        y.intersp = 1.3,
+        legend = c("Real rotation speed", "Measured rotation speed"),
+        col = c("black", "red"),
+        pch = c(1, 1))
+dev.off()
+
+# Plot for real rotation
+
+png(
+    filename =
+    "~/Documents/STAR/Kalman Filter/kalman/2d_filter/images/plot_real_rot.png"
+)
+plot(
+    data$Time, data$Rot,
+    ylim = range(-2:1),
+
+    col = "black",
+    type = "p",
+    xlab = "Time in s",
+    ylab = "Rotation in rad",
+    main = "Kalman Filter simulation - Rotation",
+)
 dev.off()

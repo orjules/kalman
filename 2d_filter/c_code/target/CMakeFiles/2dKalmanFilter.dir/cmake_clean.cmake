@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "2dKalmanFilter"
   "2dKalmanFilter.pdb"
+  "CMakeFiles/2dKalmanFilter.dir/src/logger.cpp.o"
+  "CMakeFiles/2dKalmanFilter.dir/src/logger.cpp.o.d"
   "CMakeFiles/2dKalmanFilter.dir/src/main.cpp.o"
   "CMakeFiles/2dKalmanFilter.dir/src/main.cpp.o.d"
 )
