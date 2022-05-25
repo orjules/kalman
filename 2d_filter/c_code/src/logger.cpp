@@ -26,7 +26,7 @@ void log_result_x(Matrix<8,1> x){
     printf("   Result:\n");
     printf("      x: ( %+1.3f )\n", x(0));
     for (int i = 1; i < 8; i++){
-        printf("         ( %+1.3f )\n", x(0));
+        printf("         ( %+1.3f )\n", x(i));
     }
 }
 
@@ -61,9 +61,9 @@ void log_given_P_H_R(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R){
 }
 void log_result_K(Matrix<8,3> K){
     printf("   Result:\n");
-    printf("       K: ( %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f )\n", K(0,0), K(0,1), K(0,2), K(0,3), K(0,4), K(0,5), K(0,6), K(0,7));
-    for (int i = 1; i < 3; i++){
-        printf("          ( %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f, %+1.3f )\n", K(i,0), K(i,1), K(i,2), K(i,3), K(i,4), K(i,5), K(i,6), K(i,7));
+    printf("       K: ( %+1.3f, %+1.3f, %+1.3f )\n", K(0,0), K(0,1), K(0,2));
+    for (int i = 1; i < 8; i++){
+        printf("          ( %+1.3f, %+1.3f, %+1.3f )\n", K(i,0), K(i,1), K(i,2));
     }
 }
 

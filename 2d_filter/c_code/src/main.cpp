@@ -40,15 +40,15 @@ Matrix<3,1> calculate_actual_measurements(float time){
     Matrix<3,1> z;
     z.Fill(0.0);
 
-    if (time < 1){
+    if (time>0 && time<=1){
         z(1) = 1.0;
-    }else if (time>4 && time<5){
+    }else if (time>4 && time<=5){
         z(1) = -1.0;
-    }else if (time>6 && time<7){
+    }else if (time>6 && time<=7){
         z(1) = 1.0;
-    }else if (time>8 && time<9){
+    }else if (time>8 && time<=9){
         z(1) = -1.0;
-    }else if (time>5 && time<6){
+    }else if (time>5 && time<=6){
         z(2) = - PI / 2;
     }
     
@@ -107,14 +107,14 @@ Matrix<8,8> get_A_matrix(float delta_t, float phi){
 Matrix<8,8> get_initial_P_matrix(){
     Matrix<8,8> P;
     P.Fill(0.0);    
-    P(0,0) = 1.0;
-    P(1,1) = 1.0;
-    P(2,2) = 2.0;
-    P(3,3) = 2.0;
-    P(4,4) = 3.0;
-    P(5,5) = 3.0;
-    P(6,6) = 1.0;
-    P(7,7) = 2.0;
+    P(0,0) = 0.5;
+    P(1,1) = 0.5;
+    P(2,2) = 1.0;
+    P(3,3) = 1.0;
+    P(4,4) = 2.5;
+    P(5,5) = 2.5;
+    P(6,6) = 0.5;
+    P(7,7) = 1.0;
 
     return P;
 }
@@ -148,10 +148,10 @@ Matrix<8,3> calculate_Kalman_gain(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R){
 
 int main (int argc, char *argv[]){
     float time = 0.0;
-    float delta_t = 1.0;
-    float acc_measurement_error = 0.1;
+    float delta_t = 0.5;
+    float acc_measurement_error = 0.01;
     float acc_uncertainty = 1;
-    float rot_measurement_error = 0.2;
+    float rot_measurement_error = 0.02;
     float rot_uncertainty = 1;
 
     Matrix<8,1> x;
