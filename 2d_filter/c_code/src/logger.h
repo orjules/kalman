@@ -6,6 +6,7 @@ enum LOGLEVEL{
     DEBUG,
     MEASUREMENT,
     STATE,
+    PLOT
 };
 
 /* For Debugging */
@@ -42,3 +43,5 @@ void log_header(LOGLEVEL level);
 void log_measurements(float time, Matrix<3,1> actual, Matrix<3,1> erroneous, float acc_error, float rot_error, LOGLEVEL level);
 
 void log_state(float time, Matrix<8,1> state, LOGLEVEL level);
+
+void log_plot(float time, Matrix<8,1> state, Matrix<3,1> measurements, LOGLEVEL level);

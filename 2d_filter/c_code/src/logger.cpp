@@ -111,6 +111,10 @@ void log_header(LOGLEVEL level){
     if (level == STATE){
         printf("Time, PosX, PosY, VelX, VelY, AccX, AccY, Rot, RotSpeed\n");
     }
+    if (level == PLOT){
+        printf("Time, PosX, PosY, VelX, VelY, AccX, AccY, Rot, RotSpeed, MeasAccX, MeasAccY, MeasRotSpeed\n");
+    }
+    
 }
 
 void log_measurements(float time, Matrix<3,1> actual, Matrix<3,1> erroneous, float acc_error, float rot_error, LOGLEVEL level){
@@ -121,4 +125,9 @@ void log_measurements(float time, Matrix<3,1> actual, Matrix<3,1> erroneous, flo
 void log_state(float time, Matrix<8,1> state, LOGLEVEL level){
     if (level != STATE){ return; }
     printf("%f, %f, %f, %f, %f, %f, %f, %f, %f\n", time, state(0), state(1), state(2), state(3), state(4), state(5), state(6), state(7));
+}
+
+void log_plot(float time, Matrix<8,1> state, Matrix<3,1> measurements, LOGLEVEL level){
+    if (level != PLOT){ return; }
+    printf("%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f\n", time, state(0), state(1), state(2), state(3), state(4), state(5), state(6), state(7), measurements(0), measurements(1), measurements(2));
 }

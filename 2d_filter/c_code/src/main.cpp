@@ -89,13 +89,13 @@ Matrix<8,8> get_A_matrix(float delta_t, float phi){
 Matrix<8,8> get_initial_P_matrix(){
     Matrix<8,8> P;
     P.Fill(0.0);    
-    P(0,0) = 0.5;
-    P(1,1) = 0.5;
+    P(0,0) = 1.5;
+    P(1,1) = 1.5;
     P(2,2) = 1.0;
     P(3,3) = 1.0;
-    P(4,4) = 2.5;
-    P(5,5) = 2.5;
-    P(6,6) = 0.5;
+    P(4,4) = 15.0;
+    P(5,5) = 15.0;
+    P(6,6) = 1.5;
     P(7,7) = 1.0;
 
     return P;
@@ -132,11 +132,11 @@ int main (int argc, char *argv[]){
     float time = 0.0;
     float delta_t = 0.1;
     float acc_measurement_error = 0.1;
-    float acc_uncertainty = 1;
+    float acc_uncertainty = 0.0001;
     float rot_measurement_error = 0.2;
     float rot_uncertainty = 1;
 
-    LOGLEVEL log_level = STATE;
+    LOGLEVEL log_level = PLOT;
 
     Matrix<8,1> x;
     x.Fill(0.0);
@@ -146,7 +146,7 @@ int main (int argc, char *argv[]){
     Matrix<3,1> z_erroneous;
     z_erroneous.Fill(0.0);
     Matrix<3,8> H = get_H_matrix();
-    Matrix<3,3> R = get_R_matrix(rot_measurement_error, rot_measurement_error, rot_uncertainty);
+    Matrix<3,3> R = get_R_matrix(acc_uncertainty, acc_uncertainty, rot_uncertainty);
     
 
     log_header(log_level);
@@ -182,6 +182,7 @@ int main (int argc, char *argv[]){
         x = x + K * (z_actual - H * x);
         log_result_x(x, log_level);
         log_state(time, x, log_level);
+        log_plot(time, x, z_actual, log_level);
 
         log_given_P_K_H(P,K,H, log_level);
         P = P - K * H * P; 
