@@ -10,37 +10,19 @@ using namespace std;
 
 default_random_engine rng;
 
-void print_measurements(float time, Matrix<3,1> actual, Matrix<3,1> erroneous, float acc_error, float rot_error){
-    printf("%f, %f, %f, %f, %f, %f, %f, %f, %f", time, actual(0), actual(1), actual(2), erroneous(0), erroneous(1), acc_error, erroneous(2), rot_error);
-}
-
-void print_corrected_results(Matrix<8,1> state, Matrix<8,8> uncertainty){
-    printf(", %f, %f, %f, %f, %f, %f\n", state(0), state(1), state(6), uncertainty(0,0), uncertainty(1,1), uncertainty(6,6));
-}
-
-void print_8by8(Matrix<8,8> M){
-    for (int i = 0; i < 8; i++){
-        printf("( %f, %f, %f, %f, %f, %f, %f, %f )\n", M(i,0), M(i,1), M(i,2), M(i,3), M(i,4), M(i,5), M(i,6), M(i,7));
-    }    
-}
-
-void print_3by3(Matrix<3,3> M){
-    for (int i = 0; i < 3; i++){
-        printf("( %f, %f ,%f )\n", M(i,0), M(i,1), M(i,2));
-    }
-}
-
-void print_8by3(Matrix<8,3> M){
-    for (int i = 0; i < 8; i++){
-        printf("( %f, %f ,%f )\n", M(i,0), M(i,1), M(i,2));
-    }
-}
 
 Matrix<3,1> calculate_actual_measurements(float time){
     Matrix<3,1> z;
     z.Fill(0.0);
 
-    if (time>0 && time<=1){
+    if (time<=1.0){
+        z(1) = 1.0;
+    }else if (time>2.0 && time<=3.0){
+        z(1) = -1.0;
+    }
+    
+    
+    /*if (time>0 && time<=1){
         z(1) = 1.0;
     }else if (time>4 && time<=5){
         z(1) = -1.0;
@@ -50,7 +32,7 @@ Matrix<3,1> calculate_actual_measurements(float time){
         z(1) = -1.0;
     }else if (time>5 && time<=6){
         z(2) = - PI / 2;
-    }
+    }*/
     
     return z;
 }
@@ -148,11 +130,13 @@ Matrix<8,3> calculate_Kalman_gain(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R){
 
 int main (int argc, char *argv[]){
     float time = 0.0;
-    float delta_t = 0.5;
-    float acc_measurement_error = 0.01;
+    float delta_t = 0.1;
+    float acc_measurement_error = 0.1;
     float acc_uncertainty = 1;
-    float rot_measurement_error = 0.02;
+    float rot_measurement_error = 0.2;
     float rot_uncertainty = 1;
+
+    LOGLEVEL log_level = STATE;
 
     Matrix<8,1> x;
     x.Fill(0.0);
@@ -163,44 +147,44 @@ int main (int argc, char *argv[]){
     z_erroneous.Fill(0.0);
     Matrix<3,8> H = get_H_matrix();
     Matrix<3,3> R = get_R_matrix(rot_measurement_error, rot_measurement_error, rot_uncertainty);
+    
 
-    // printf("Time, ActualAccX, ActualAccY, ActualRot, ErroneousAccX, ErroneousAccY, ErrorAcc, ErroneousRot, ErrorRot");
-    // printf(", PosX, PosY, Rot, UncertX, UncertY, UncertRot\n");
+    log_header(log_level);
 
-    for (int i = 0; i < 10; i++){
-        log_time(time);
+    for (int i = 0; i < 51; i++){
+        time += delta_t;
+        log_time(time, log_level);
 
         // Prediction step
         Matrix<8,8> A = get_A_matrix(delta_t, x(6));
 
-        log_given_A_x(A, x);
+        log_given_A_x(A, x, log_level);
         x = A * x;
-        log_result_x(x);
+        log_result_x(x, log_level);
 
-        log_given_A_P(A,P);
+        log_given_A_P(A,P, log_level);
         P = A * P * ~A;
-        log_result_P(P);
+        log_result_P(P, log_level);
         
-        // Calculate measurements
-        // print_measurements(time, z_actual, z_erroneous, acc_measurement_error, rot_measurement_error);
 
+        // Calculate measurements
         z_actual = calculate_actual_measurements(time);
         z_erroneous = calculate_erroneous_measurements(time, acc_measurement_error, rot_measurement_error);
+        log_measurements(time, z_actual, z_erroneous, acc_measurement_error, rot_measurement_error, log_level);
         
+
         // Correction step
-        log_given_P_H_R(P,H,R);
+        log_given_P_H_R(P,H,R, log_level);
         Matrix<8,3> K = calculate_Kalman_gain(P, H, R);
-        log_result_K(K);
-        
+        log_result_K(K, log_level);
 
-        log_given_x_K_z(x, K, z_actual);
+        log_given_x_K_z(x, K, z_actual, log_level);
         x = x + K * (z_actual - H * x);
-        log_result_x(x);
+        log_result_x(x, log_level);
+        log_state(time, x, log_level);
 
-        log_given_P_K_H(P,K,H);
+        log_given_P_K_H(P,K,H, log_level);
         P = P - K * H * P; 
-        log_result_P(P);
-
-        time += delta_t;
+        log_result_P(P, log_level);
     }   
 }
