@@ -178,11 +178,11 @@ int main (int argc, char *argv[]){
         Matrix<8,3> K = calculate_Kalman_gain(P, H, R);
         log_result_K(K, log_level);
 
-        log_given_x_K_z(x, K, z_actual, log_level);
-        x = x + K * (z_actual - H * x);
+        log_given_x_K_z(x, K, z_erroneous, log_level);
+        x = x + K * (z_erroneous - H * x);
         log_result_x(x, log_level);
         log_state(time, x, log_level);
-        log_plot(time, x, z_actual, log_level);
+        log_plot(time, x, z_erroneous, log_level);
 
         log_given_P_K_H(P,K,H, log_level);
         P = P - K * H * P; 

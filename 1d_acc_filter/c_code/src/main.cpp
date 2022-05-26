@@ -14,6 +14,7 @@ Matrix<3,3> get_A_matrix(float dt){
     A(1,1) = 1.0;
     A(1,2) = dt;
     A(2,2) = 1.0;
+    return A;
 }
 
 Matrix<1,1> get_measurement(float time){
@@ -39,10 +40,10 @@ Matrix<3,1> calculate_Kalman_gain(Matrix<3,3> P, Matrix<1,3> H, Matrix<1,1> R){
 
 int main (int argc, char *argv[]){
     float time = 0.0;
-    const float delta_t = 0.5;
-    const float meas_error = 0.1;
+    const float delta_t = 0.1;
+    const float meas_error = 0.01;
 
-    LOGLEVEL log_level = DEBUG;
+    LOGLEVEL log_level = PLOT;
     Matrix<3,1> x;
     x.Fill(0.0);
     Matrix<3,3> A = get_A_matrix(delta_t);
@@ -54,14 +55,14 @@ int main (int argc, char *argv[]){
     Matrix<1,1> z;
     Matrix<1,3> H;
     H.Fill(0.0);
-    H(2) = 1.0;
+    H(0,2) = 1.0;
     Matrix<1,1> R;
     R(0,0) = meas_error;
     Matrix<3,1> K;
 
     log_header(log_level);
 
-    for (int i = 0; i < 8; i++){
+    for (int i = 0; i < 33; i++){
         time += delta_t;
 
         log_time_header(time, log_level);

@@ -16,7 +16,7 @@ void log_time_header(float time, LOGLEVEL level){
     for (int i = 0; i < 90; i++){
         printf("=");
     }
-    printf("\n\nThe time is: %1.1f\n", time);
+    printf("\n\nThe time is: %1.2f\n", time);
     for (int i = 0; i < 16; i++){
         printf("-");
     }
