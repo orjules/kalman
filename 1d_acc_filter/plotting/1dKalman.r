@@ -13,12 +13,12 @@ plot(
     data$Time, data$Acceleration,
     ylim = range(-1.5:1.5),
     col = "blue",
-    type = "p",
+    type = "l",
     xlab = "Time in s",
     ylab = "Acceleration in m/s^2",
     main = "Kalman Filter simulation - Acceleration",
 )
-points(data$Time, data$Measurement, col = "red")
+lines(data$Time, data$Measurement, col = "red")
 
 legend("topright",
         inset = 0.01,

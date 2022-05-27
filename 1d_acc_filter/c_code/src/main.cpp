@@ -24,7 +24,7 @@ Matrix<3,3> get_Q_matrix(){
     // Process noise
     Matrix<3,3> Q;
     Q.Fill(0.0);
-    Q(2,2) = 0.1;
+    Q(2,2) = 0.03;
     return Q;
 }
 
@@ -83,7 +83,7 @@ int main (int argc, char *argv[]){
 
     log_header(log_level);
 
-    for (int i = 0; i < 33; i++){
+    for (int i = 0; i < 41; i++){
         time += delta_t;
 
         log_time_header(time, log_level);
@@ -100,8 +100,8 @@ int main (int argc, char *argv[]){
         K = calculate_Kalman_gain(P, H, R);
         log_result_K(K,log_level);
         
-        z = get_measurement(time);
-        // z = get_erroneous_measurements(time, meas_error);
+        // z = get_measurement(time);
+        z = get_erroneous_measurements(time, meas_error);
 
         log_given_x_K_z_P(x,K,z,P,log_level);
         x = x + K * (z - H * x);
