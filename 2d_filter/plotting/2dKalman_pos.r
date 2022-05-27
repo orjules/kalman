@@ -15,12 +15,12 @@ plot(
     type = "l",
     xlab = "Position X in m",
     ylab = "Position Y in m",
-    main = "Kalman Filter simulation - Acceleration",
+    main = "Kalman Filter simulation - Position",
     sub = sprintf("Error in measurement: %1.2f, Q for acceleration: %1.2f", data[1, "AccError"], data[1, "Q_acc"])
 )
 
 legend("topright",
-        inset = 0.01,
+        inset = 0.03,
         cex = 0.9,
         bty = "n",
         y.intersp = 1.3,

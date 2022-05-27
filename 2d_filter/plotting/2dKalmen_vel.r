@@ -16,10 +16,11 @@ plot(
     type = "l",
     xlab = "Time in s",
     ylab = "Velocity in m/s | Acceleration in m/s^2",
-    main = "Kalman Filter simulation - Acceleration",
+    main = "Kalman Filter simulation - Velocity",
     sub = sprintf("Error in measurement: %1.2f, Q for acceleration: %1.2f", data[1, "AccError"], data[1, "Q_acc"])
 )
 lines(data$Time, data$MeasAccY, col = "red")
+lines(data$Time, data$MeasAccX, col = "black")
 lines(data$Time, data$VelX, col = "orange")
 abline(h=0)
 
@@ -28,8 +29,8 @@ legend("topright",
         cex = 0.9,
         bty = "n",
         y.intersp = 1.3,
-        legend = c("State velocity in y", "State velocity in x", "Measured acceleration in y"),
-        col = c("blue", "orange", "red"),
-        pch = c(1, 1, 1))
+        legend = c("State velocity in y", "State velocity in x", "Measured acceleration in x", "Measured acceleration in y"),
+        col = c("blue", "orange", "black", "red"),
+        pch = c(1, 1, 1, 1))
 
 dev.off()
