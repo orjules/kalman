@@ -4,6 +4,9 @@
 #include"logger.h"
 
 using namespace BLA;
+using namespace std;
+
+default_random_engine rng;
 
 Matrix<3,3> get_A_matrix(float dt){
     Matrix<3,3> A;
@@ -15,6 +18,21 @@ Matrix<3,3> get_A_matrix(float dt){
     A(1,2) = dt;
     A(2,2) = 1.0;
     return A;
+}
+
+Matrix<3,3> get_Q_matrix(){
+    // Process noise
+    Matrix<3,3> Q;
+    Q.Fill(0.0);
+    Q(2,2) = 0.1;
+    return Q;
+}
+
+Matrix<3,1> calculate_Kalman_gain(Matrix<3,3> P, Matrix<1,3> H, Matrix<1,1> R){
+    Matrix<3,1> dividend = P * ~H;
+    Matrix<1,1> divisor = H * dividend + R;
+    Invert(divisor);
+    return dividend * divisor;
 }
 
 Matrix<1,1> get_measurement(float time){
@@ -31,17 +49,18 @@ Matrix<1,1> get_measurement(float time){
     return z;
 }
 
-Matrix<3,1> calculate_Kalman_gain(Matrix<3,3> P, Matrix<1,3> H, Matrix<1,1> R){
-    Matrix<3,1> dividend = P * ~H;
-    Matrix<1,1> divisor = H * dividend + R;
-    Invert(divisor);
-    return dividend * divisor;
+Matrix<1,1> get_erroneous_measurements(float time, float meas_error){
+    Matrix<1,1> z = get_measurement(time);
+    normal_distribution<float> rand_acc(0.0, meas_error);
+    z(0) = z(0) + rand_acc(rng);
+    return z;
 }
+
 
 int main (int argc, char *argv[]){
     float time = 0.0;
     const float delta_t = 0.1;
-    const float meas_error = 0.01;
+    const float meas_error = 0.1;
 
     LOGLEVEL log_level = PLOT;
     Matrix<3,1> x;
@@ -49,9 +68,9 @@ int main (int argc, char *argv[]){
     Matrix<3,3> A = get_A_matrix(delta_t);
     Matrix<3,3> P;
     P.Fill(0.0);
-    P(0,0) = 0.5;
-    P(1,1) = 0.5;
-    P(2,2) = 0.5;
+    P(0,0) = 3.5;
+    P(1,1) = 3.5;
+    P(2,2) = 15.0;
     Matrix<1,1> z;
     Matrix<1,3> H;
     H.Fill(0.0);
@@ -59,6 +78,8 @@ int main (int argc, char *argv[]){
     Matrix<1,1> R;
     R(0,0) = meas_error;
     Matrix<3,1> K;
+
+    Matrix<3,3> Q = get_Q_matrix();
 
     log_header(log_level);
 
@@ -68,9 +89,9 @@ int main (int argc, char *argv[]){
         log_time_header(time, log_level);
         log_prediction(log_level);
 
-        log_given_A_x_P(A,x,P, log_level);
+        log_given_A_x_P_Q(A,x,P,Q,log_level);
         x = A * x;
-        P = A * P * ~A;
+        P = A * P * ~A + Q;
         log_result_x_P(x,P,log_level);
 
         log_correction(log_level);
@@ -80,6 +101,7 @@ int main (int argc, char *argv[]){
         log_result_K(K,log_level);
         
         z = get_measurement(time);
+        // z = get_erroneous_measurements(time, meas_error);
 
         log_given_x_K_z_P(x,K,z,P,log_level);
         x = x + K * (z - H * x);

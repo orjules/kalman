@@ -15,7 +15,7 @@ void log_plot(float time, Matrix<3,1> x, Matrix<1,1> z, LOGLEVEL level);
 void log_time_header(float time, LOGLEVEL level);
 void log_prediction(LOGLEVEL level);
 void log_correction(LOGLEVEL level);
-void log_given_A_x_P(Matrix<3,3> A, Matrix<3,1> x, Matrix<3,3> P, LOGLEVEL level);
+void log_given_A_x_P_Q(Matrix<3,3> A, Matrix<3,1> x, Matrix<3,3> P, Matrix<3,3> Q, LOGLEVEL level);
 void log_result_x_P(Matrix<3,1> x, Matrix<3,3> P, LOGLEVEL level);
 void log_given_P_H_R(Matrix<3,3> P, Matrix<1,3> H, Matrix<1,1> R, LOGLEVEL level);
 void log_result_K(Matrix<3,1> K, LOGLEVEL level);

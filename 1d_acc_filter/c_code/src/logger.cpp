@@ -33,13 +33,13 @@ void log_correction(LOGLEVEL level){
     printf("Correction step\n");
 }
 
-void log_given_A_x_P(Matrix<3,3> A, Matrix<3,1> x, Matrix<3,3> P, LOGLEVEL level){
+void log_given_A_x_P_Q(Matrix<3,3> A, Matrix<3,1> x, Matrix<3,3> P, Matrix<3,3> Q, LOGLEVEL level){
     if (level != DEBUG){ return; }
     printf("   Given:\n");
-    printf("   A: ( %1.3f, %1.3f, %1.3f )   x: ( %1.3f )   P: ( %1.3f, %1.3f, %1.3f )\n", A(0,0), A(0,1), A(0,2), x(0), P(0,0), P(0,1), P(0,2));
+    printf("   A: ( %1.3f, %1.3f, %1.3f )   x: ( %1.3f )   P: ( %1.3f, %1.3f, %1.3f )   Q: ( %1.3f, %1.3f, %1.3f )\n", A(0,0), A(0,1), A(0,2), x(0), P(0,0), P(0,1), P(0,2), Q(0,0), Q(0,1), Q(0,2));
     for (int i = 1; i < 3; i++)
     {
-        printf("      ( %1.3f, %1.3f, %1.3f )      ( %1.3f )      ( %1.3f, %1.3f, %1.3f )\n", A(i,0), A(i,1), A(i,2), x(i), P(i,0), P(i,1), P(i,2));
+        printf("      ( %1.3f, %1.3f, %1.3f )      ( %1.3f )      ( %1.3f, %1.3f, %1.3f )      ( %1.3f, %1.3f, %1.3f )\n", A(i,0), A(i,1), A(i,2), x(i), P(i,0), P(i,1), P(i,2), Q(i,0), Q(i,1), Q(i,2));
     }
 }
 
@@ -69,7 +69,7 @@ void log_result_K(Matrix<3,1> K, LOGLEVEL level){
     printf("   K: ( %1.3f )\n", K(0));
     for (int i = 1; i < 3; i++)
     {
-        printf("   K: ( %1.3f )\n", K(i));
+        printf("      ( %1.3f )\n", K(i));
     }
 }
 
