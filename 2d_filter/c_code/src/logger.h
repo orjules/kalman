@@ -4,44 +4,30 @@ using namespace BLA;
 
 enum LOGLEVEL{
     DEBUG,
-    MEASUREMENT,
-    STATE,
     PLOT
 };
 
-/* For Debugging */
-
-void log_time(float time, LOGLEVEL level);
-
-// Prediction step
-// Given: A and x => Result x
-void log_given_A_x(Matrix<8,8> A, Matrix<8,1> x, LOGLEVEL level);
-void log_result_x(Matrix<8,1> x, LOGLEVEL level);
-
-// Given: A and P => Result P
-void log_given_A_P(Matrix<8,8> A, Matrix<8,8> P, LOGLEVEL level);
-void log_result_P(Matrix<8,8> P, LOGLEVEL level);
-
-
-// Corrention step
-// Given P, H and R => Result K
-void log_given_P_H_R(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R, LOGLEVEL level);
-void log_result_K(Matrix<8,3> K, LOGLEVEL level);
-
-// Given x, K and z => Result x
-void log_given_x_K_z(Matrix<8,1> x, Matrix<8,3> K, Matrix<3,1> z, LOGLEVEL level);
-
-// Given P, H and K => Result P
-void log_given_P_K_H(Matrix<8,8> P, Matrix<8,3> K, Matrix<3,8> H, LOGLEVEL level);
-
-
-
-/* For Plotting */
-
-void log_header(LOGLEVEL level);
-
-void log_measurements(float time, Matrix<3,1> actual, Matrix<3,1> erroneous, float acc_error, float rot_error, LOGLEVEL level);
-
-void log_state(float time, Matrix<8,1> state, LOGLEVEL level);
-
-void log_plot(float time, Matrix<8,1> state, Matrix<3,1> measurements, LOGLEVEL level);
+class logger{
+private:
+    LOGLEVEL level;
+    void p_8_name(char name, float a, float b, float c, float d, float e, float f, float g, float h);
+    void p_8(float a, float b, float c, float d, float e, float f, float g, float h);
+    void p_3_name(char name, float a, float b, float c);
+    void p_3(float a, float b, float c);
+public:
+    logger(LOGLEVEL log_level);
+    /* For Debugging */
+    void log_time(float time);
+    // Prediction step
+    void log_prediction();
+    void log_given_A_x_P_Q(Matrix<8,8> A, Matrix<8,1> x, Matrix<8,8> P, Matrix<8,8> Q);
+    void log_result_x_P(Matrix<8,1> x, Matrix<8,8> P);
+    // Correction step
+    void log_correction();
+    void log_given_P_H_R(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R);
+    void log_result_K(Matrix<8,3> K);
+    void log_given_x_K_P_z(Matrix<8,1> x, Matrix<8,3> K, Matrix<8,8> P, Matrix<3,1> z);
+    /* For Plotting */
+    void log_header();
+    void log_plot(float time, Matrix<8,1> state, Matrix<3,1> measurements, float acc_error, float rot_error, float Q_acc, float Q_rot);
+};

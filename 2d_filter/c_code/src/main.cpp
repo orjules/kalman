@@ -145,7 +145,7 @@ int main (int argc, char *argv[]){
     const float Q_acc = 0.5;
     const float Q_rot = 1.0;
 
-    LOGLEVEL log_level = PLOT;
+    logger lg = logger(PLOT);
 
     Matrix<8,1> x;
     x.Fill(0.0);
@@ -158,22 +158,20 @@ int main (int argc, char *argv[]){
     Matrix<8,8> Q = get_Q_matrix(Q_acc, Q_rot);
     
 
-    log_header(log_level);
+    lg.log_header();
 
     for (int i = 0; i < 51; i++){
         time += delta_t;
-        log_time(time, log_level);
+        lg.log_time(time);
 
         // Prediction step
         Matrix<8,8> A = get_A_matrix(delta_t, x(6));
 
-        log_given_A_x(A, x, log_level);
-        x = A * x;
-        log_result_x(x, log_level);
 
-        log_given_A_P(A,P, log_level);
+        lg.log_given_A_x_P_Q(A, x, P, Q);
+        x = A * x;
         P = A * P * ~A + Q;
-        log_result_P(P, log_level);
+        lg.log_result_x_P(x,P);
         
 
         // Calculate measurements
@@ -181,18 +179,15 @@ int main (int argc, char *argv[]){
         // z = calculate_erroneous_measurements(time, acc_meas_error, rot_meas_error);
  
         // Correction step
-        log_given_P_H_R(P,H,R, log_level);
+        lg.log_given_P_H_R(P, H, R);
         Matrix<8,3> K = calculate_Kalman_gain(P, H, R);
-        log_result_K(K, log_level);
-
-        log_given_x_K_z(x, K, z, log_level);
+        lg.log_result_K(K);
+        
+        lg.log_given_x_K_P_z(x,K,P,z);
         x = x + K * (z - H * x);
-        log_result_x(x, log_level);
-        log_state(time, x, log_level);
-        log_plot(time, x, z, log_level);
-
-        log_given_P_K_H(P,K,H, log_level);
         P = P - K * H * P; 
-        log_result_P(P, log_level);
+        lg.log_result_x_P(x,P);
+
+        lg.log_plot(time, x, z, acc_meas_error, rot_meas_error, Q_acc, Q_rot);
     }   
 }
