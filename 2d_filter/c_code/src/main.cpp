@@ -2,8 +2,7 @@
 #include <random>
 #include"../../../libraries/BasicLinearAlgebra-3.6/BasicLinearAlgebra.h"
 #include"logger.h"
-
-#define PI 3.14159
+#include <math.h>
 
 using namespace BLA;
 using namespace std;
@@ -15,14 +14,16 @@ Matrix<3,1> calculate_actual_measurements(float time){
     Matrix<3,1> z;
     z.Fill(0.0);
 
-    if (time<=1.0){
+    /*
+    if (time>0.0 && time<=1.0){
         z(1) = 1.0;
     }else if (time>2.0 && time<=3.0){
         z(1) = -1.0;
     }
+    */
     
     
-    /*if (time>0 && time<=1){
+    if (time>0 && time<=1){
         z(1) = 1.0;
     }else if (time>4 && time<=5){
         z(1) = -1.0;
@@ -31,8 +32,8 @@ Matrix<3,1> calculate_actual_measurements(float time){
     }else if (time>8 && time<=9){
         z(1) = -1.0;
     }else if (time>5 && time<=6){
-        z(2) = - PI / 2;
-    }*/
+        z(2) = - M_PI / 2;
+    }
     
     return z;
 }
@@ -54,9 +55,11 @@ Matrix<8,8> get_A_matrix(float delta_t, float phi){
     Matrix<8,8> A;
     A.Fill(0.0);
 
-    float cos_phi = cos(phi);
-    float sin_phi = sin(phi);
+    float mod_phi = fmod(phi, 2 * M_PI);
 
+    float cos_phi = cos(mod_phi);
+    float sin_phi = sin(mod_phi);
+    
     A(0,0) = 1.0;
     A(0,2) = delta_t * cos_phi;
     A(0,3) = delta_t * (- sin_phi);
@@ -142,8 +145,8 @@ int main (int argc, char *argv[]){
     const float delta_t = 0.1;
     const float acc_meas_error = 0.1;
     const float rot_meas_error = 0.2;
-    const float Q_acc = 0.5;
-    const float Q_rot = 1.0;
+    const float Q_acc = 0.2;
+    const float Q_rot = 0.4;
 
     logger lg = logger(PLOT);
 
@@ -160,20 +163,16 @@ int main (int argc, char *argv[]){
 
     lg.log_header();
 
-    for (int i = 0; i < 51; i++){
-        time += delta_t;
+    for (int i = 0; i < 101; i++){
         lg.log_time(time);
 
         // Prediction step
         Matrix<8,8> A = get_A_matrix(delta_t, x(6));
-
-
         lg.log_given_A_x_P_Q(A, x, P, Q);
         x = A * x;
         P = A * P * ~A + Q;
         lg.log_result_x_P(x,P);
         
-
         // Calculate measurements
         z = calculate_actual_measurements(time);
         // z = calculate_erroneous_measurements(time, acc_meas_error, rot_meas_error);
@@ -189,5 +188,6 @@ int main (int argc, char *argv[]){
         lg.log_result_x_P(x,P);
 
         lg.log_plot(time, x, z, acc_meas_error, rot_meas_error, Q_acc, Q_rot);
+        time += delta_t;
     }   
 }

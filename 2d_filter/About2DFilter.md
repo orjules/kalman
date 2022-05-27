@@ -66,7 +66,37 @@ Run `./2dKalmanFilter > ../../plotting/c_out.txt`.
 
 ## Lessons learned
 
-The two measurements are simulated in a ways which is plotted here:
+1. Having some sort of logging is very useful
+2. `Q` should not be omitted
+3. (something with rotation)
 
-![](images/plot_acc.png)
-![](images/plot_rot.png)
+### Logging
+
+When I was done implementing the filter I had to test it, to make sure it worked correctly.
+Initially I only looked at the sta!te in each iteration, because printing everything seemed a hassle and would make the actual code unreadable with all the print statements.
+But when I encountered some strange value in the state output, I had no idea where it came from.
+
+So I went back and implemented a logger.
+This way I was able to output everything without clutter all over my code.
+The logger also has levels to change between a DEBUG mode, where everything will be printed to the console in human readable form and LOG mode where a subset will be printed in a CSV format.
+
+### `Q` is important
+
+As learned in [the 1d filter](../1d_acc_filter/About1dAcc.md), the `Q` matrix should not be omitted, in order to have a fast response to changes in the measurements.
+
+### Sin and Cos must be correct
+
+After fixing the slow following of the measurements with `Q` I plotted the results.
+
+Rotation speed and rotation look as expected:
+
+![](images/plot_rotspeed_wrong.png)
+![](images/plot_rot_wrong.png)
+
+But the acceleration seemed a bit of and the velocity oscillated, which also influenced the position.
+
+![](images/plot_acc_wrong.png)
+![](images/plot_vel_wrong.png)
+![](images/plot_pos_wrong.png)
+
+Since everything up the moment of rotation looks fine, my guess was, that I had gotten sin and cos wrong, somewhere in the `A` matrix.

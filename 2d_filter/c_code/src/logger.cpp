@@ -161,7 +161,6 @@ void logger::log_plot(float time, Matrix<8,1> state, Matrix<3,1> measurements, f
     printf("%f, %f, ", state(2), state(3));
     printf("%f, %f, ", state(4), state(5));
     printf("%f, %f, ", state(6), state(7));
-    printf("%f, %f, ", state(6), state(7));
     printf("%f, %f, %f, ", measurements(0), measurements(1), measurements(2));
     printf("%f, %f, ", acc_error, rot_error);
     printf("%f, %f\n", Q_acc, Q_rot);
