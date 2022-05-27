@@ -18,15 +18,18 @@ Because this is very ambitious and complex I decided to write out some subgoals 
     - The example from one of my courses is an object falling in one dimension
     - This includes some 2x2 matrices because position and velocity will be important
     - For the language I changed over to c++ because there is a useful library for matrix operations
-3. Implement filter for 2D problem
-    - The example here is not yet decided, but it should include rotation and acceleration in 2D
-    - Since orientation in 3D uses complex matrices or 4D numbers I want to limit the problem 
-    - Acceleration is important for the accelerometers I want to use later
-    - The resulting code might be run on actual hardware to test it
-4. Understand Quaternions and/or direction cosine matrices 
+3. Implement [1D acceleration filter](1d_acc_filter/About1dAcc.md) - done
+   - I really wanted to implement the 2D problem from point 4 but some weird results forced me to go back a step
+   - This example is of an object which moves along 1 axis and has acceleration as the measured value
+4. Implement [2D acc and rot filter](2d_filter/About2DFilter.md) - done
+    - The example is of an object limited to the x-y-plane 
+    - It can rotate around the z axis
+    - The measured values are the acceleration and rotation speed
+    - The sample path has it move forward, turn 90 degree and move in the new forward direction
+5. Understand Quaternions and/or direction cosine matrices 
     - The kalman filter requires a description of the system, which includes orientation
     - Orientation in 3D requires complex math which I must familiarize myself first
-5. Implement filter for 3D problem
+6. Implement filter for 3D problem
     - This should be the final code that can run on the microcontroller
-6. Modularize if possible
+7. Modularize if possible
     - To build on the code base at this stage I would like to break it up into modules that can be turned on or off, dependant on the kinds of sensors which are in use
