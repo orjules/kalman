@@ -2,12 +2,12 @@
 
 void log_header(LOGLEVEL level){
     if (level != PLOT){ return; }
-    printf("Time, Direction, Velocity, Acceleration, Measurement\n");
+    printf("Time, Distance, Velocity, Acceleration, Measurement, Meas_Err, Q_acc\n");
 }
 
-void log_plot(float time, Matrix<3,1> x, Matrix<1,1> z, LOGLEVEL level){
+void log_plot(float time, Matrix<3,1> x, Matrix<1,1> z, float meas_err, float Q_acc, LOGLEVEL level){
     if (level != PLOT){ return; }
-    printf("%f, %f, %f, %f, %f\n", time, x(0), x(1), x(2), z(0));
+    printf("%f, %f, %f, %f, %f, %f, %f\n", time, x(0), x(1), x(2), z(0), meas_err, Q_acc);
 }
 
 void log_time_header(float time, LOGLEVEL level){

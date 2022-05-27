@@ -9,7 +9,7 @@ enum LOGLEVEL{
 
 // For Plotting
 void log_header(LOGLEVEL level);
-void log_plot(float time, Matrix<3,1> x, Matrix<1,1> z, LOGLEVEL level);
+void log_plot(float time, Matrix<3,1> x, Matrix<1,1> z, float meas_err, float Q_acc, LOGLEVEL level);
 
 // For Debugging
 void log_time_header(float time, LOGLEVEL level);

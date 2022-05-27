@@ -20,11 +20,11 @@ Matrix<3,3> get_A_matrix(float dt){
     return A;
 }
 
-Matrix<3,3> get_Q_matrix(){
+Matrix<3,3> get_Q_matrix(float Q_acc){
     // Process noise
     Matrix<3,3> Q;
     Q.Fill(0.0);
-    Q(2,2) = 0.03;
+    Q(2,2) = Q_acc;
     return Q;
 }
 
@@ -61,6 +61,7 @@ int main (int argc, char *argv[]){
     float time = 0.0;
     const float delta_t = 0.1;
     const float meas_error = 0.1;
+    const float Q_acc = 0.03;
 
     LOGLEVEL log_level = PLOT;
     Matrix<3,1> x;
@@ -79,7 +80,7 @@ int main (int argc, char *argv[]){
     R(0,0) = meas_error;
     Matrix<3,1> K;
 
-    Matrix<3,3> Q = get_Q_matrix();
+    Matrix<3,3> Q = get_Q_matrix(Q_acc);
 
     log_header(log_level);
 
@@ -108,7 +109,7 @@ int main (int argc, char *argv[]){
         P = P - K * H * P;
         log_result_x_P(x,P,log_level);
 
-        log_plot(time, x, z, log_level);
+        log_plot(time, x, z, meas_error, Q_acc, log_level);
     }
     
 }

@@ -63,3 +63,9 @@ For the following plot, the `Q` value for acceleration was lowered to `0.03`.
 In conclusion:
 - `Q` should not be ignored
 - More `Q` means faster convergence and less smoothing
+
+With the added `Q` the velocity and distance also follow the expected paths:
+
+![](images/plot_vel.png)
+
+![](images/plot_dist.png)
