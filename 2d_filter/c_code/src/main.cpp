@@ -121,6 +121,15 @@ Matrix<3,3> get_R_matrix(float error_ax, float error_ay, float error_rot){
     return R;
 }
 
+Matrix<8,8> get_Q_matrix(float Q_acc, float Q_rot){
+    Matrix<8,8> Q;
+    Q.Fill(0.0);
+    Q(4,4) = Q_acc;
+    Q(5,5) = Q_acc;
+    Q(7,7) = Q_rot;
+    return Q;
+}
+
 Matrix<8,3> calculate_Kalman_gain(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R){
     Matrix<8,3> temp = P * ~H;
     Matrix<3,3> temp2 = H * temp + R;
@@ -130,23 +139,23 @@ Matrix<8,3> calculate_Kalman_gain(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R){
 
 int main (int argc, char *argv[]){
     float time = 0.0;
-    float delta_t = 0.1;
-    float acc_measurement_error = 0.1;
-    float acc_uncertainty = 0.0001;
-    float rot_measurement_error = 0.2;
-    float rot_uncertainty = 1;
+    const float delta_t = 0.1;
+    const float acc_meas_error = 0.1;
+    const float rot_meas_error = 0.2;
+    const float Q_acc = 0.5;
+    const float Q_rot = 1.0;
 
     LOGLEVEL log_level = PLOT;
 
     Matrix<8,1> x;
     x.Fill(0.0);
     Matrix<8,8> P = get_initial_P_matrix();
-    Matrix<3,1> z_actual;
-    z_actual.Fill(0.0);
-    Matrix<3,1> z_erroneous;
-    z_erroneous.Fill(0.0);
+    Matrix<3,1> z;
+    z.Fill(0.0);
     Matrix<3,8> H = get_H_matrix();
-    Matrix<3,3> R = get_R_matrix(acc_uncertainty, acc_uncertainty, rot_uncertainty);
+    Matrix<3,3> R = get_R_matrix(acc_meas_error, acc_meas_error, rot_meas_error);
+
+    Matrix<8,8> Q = get_Q_matrix(Q_acc, Q_rot);
     
 
     log_header(log_level);
@@ -163,26 +172,24 @@ int main (int argc, char *argv[]){
         log_result_x(x, log_level);
 
         log_given_A_P(A,P, log_level);
-        P = A * P * ~A;
+        P = A * P * ~A + Q;
         log_result_P(P, log_level);
         
 
         // Calculate measurements
-        z_actual = calculate_actual_measurements(time);
-        z_erroneous = calculate_erroneous_measurements(time, acc_measurement_error, rot_measurement_error);
-        log_measurements(time, z_actual, z_erroneous, acc_measurement_error, rot_measurement_error, log_level);
-        
-
+        z = calculate_actual_measurements(time);
+        // z = calculate_erroneous_measurements(time, acc_meas_error, rot_meas_error);
+ 
         // Correction step
         log_given_P_H_R(P,H,R, log_level);
         Matrix<8,3> K = calculate_Kalman_gain(P, H, R);
         log_result_K(K, log_level);
 
-        log_given_x_K_z(x, K, z_erroneous, log_level);
-        x = x + K * (z_erroneous - H * x);
+        log_given_x_K_z(x, K, z, log_level);
+        x = x + K * (z - H * x);
         log_result_x(x, log_level);
         log_state(time, x, log_level);
-        log_plot(time, x, z_erroneous, log_level);
+        log_plot(time, x, z, log_level);
 
         log_given_P_K_H(P,K,H, log_level);
         P = P - K * H * P; 
