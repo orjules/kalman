@@ -32,7 +32,7 @@ Matrix<3,1> calculate_actual_measurements(float time){
     }else if (time>8 && time<=9){
         z(1) = -1.0;
     }else if (time>5 && time<=6){
-        z(2) = - M_PI / 2;
+        z(2) = M_PI / 2;
     }
     
     return z;
@@ -148,10 +148,11 @@ int main (int argc, char *argv[]){
     const float Q_acc = 0.2;
     const float Q_rot = 0.4;
 
-    logger lg = logger(PLOT);
+    logger lg = logger(DEBUG);
 
     Matrix<8,1> x;
     x.Fill(0.0);
+    x(6) = M_PI / 2;
     Matrix<8,8> P = get_initial_P_matrix();
     Matrix<3,1> z;
     z.Fill(0.0);
@@ -163,10 +164,13 @@ int main (int argc, char *argv[]){
 
     lg.log_header();
 
-    for (int i = 0; i < 101; i++){
+    for (int i = 0; i < 11; i++){
+
+        time += delta_t;
         lg.log_time(time);
 
         // Prediction step
+        lg.log_prediction();
         Matrix<8,8> A = get_A_matrix(delta_t, x(6));
         lg.log_given_A_x_P_Q(A, x, P, Q);
         x = A * x;
@@ -178,6 +182,7 @@ int main (int argc, char *argv[]){
         // z = calculate_erroneous_measurements(time, acc_meas_error, rot_meas_error);
  
         // Correction step
+        lg.log_correction();
         lg.log_given_P_H_R(P, H, R);
         Matrix<8,3> K = calculate_Kalman_gain(P, H, R);
         lg.log_result_K(K);
@@ -188,6 +193,5 @@ int main (int argc, char *argv[]){
         lg.log_result_x_P(x,P);
 
         lg.log_plot(time, x, z, acc_meas_error, rot_meas_error, Q_acc, Q_rot);
-        time += delta_t;
     }   
 }

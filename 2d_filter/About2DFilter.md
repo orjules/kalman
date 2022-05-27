@@ -100,3 +100,7 @@ But the acceleration seemed a bit of and the velocity oscillated, which also inf
 ![](images/plot_pos_wrong.png)
 
 Since everything up the moment of rotation looks fine, my guess was, that I had gotten sin and cos wrong, somewhere in the `A` matrix.
+
+After a lot of DEBUG prints and hand calculations I realized, that the filter currently turns the state by 90 degrees in each prediction step. This is because the `A` matrix does what it is supposed to and transform the local state values into global state values, which in this case is a rotation by 90 degrees.
+
+But this should not happen each prediction step, because it spins the state in circles rather the measurements from local space have to be transformed into global space.
