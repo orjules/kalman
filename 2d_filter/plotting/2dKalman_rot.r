@@ -11,6 +11,7 @@ png(
 
 plot(
     data$Time, data$Rot,
+    ylim = c(-2, 1),
     col = "blue",
     type = "l",
     xlab = "Time in s",
@@ -19,6 +20,8 @@ plot(
     sub = sprintf("Error in measurement: %1.2f, Q for rotation speed: %1.2f", data[1, "RotError"], data[1, "Q_rot"])
 )
 lines(data$Time, data$MeasRot, col = "red")
+abline(h = 0)
+abline(h = -1.570796)
 
 legend("topright",
         inset = 0.01,

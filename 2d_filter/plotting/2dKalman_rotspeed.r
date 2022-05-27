@@ -12,6 +12,7 @@ png(
 plot(
     data$Time, data$RotSpeed,
     col = "blue",
+    ylim = c(-2, 1),
     type = "l",
     xlab = "Time in s",
     ylab = "Angular velocity in rad/s",

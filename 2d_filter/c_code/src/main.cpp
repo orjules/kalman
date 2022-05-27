@@ -131,11 +131,11 @@ Matrix<8,3> calculate_Kalman_gain(Matrix<8,8> P, Matrix<3,8> H, Matrix<3,3> R){
 
 int main (int argc, char *argv[]){
     float time = 0.0;
-    const float delta_t = 0.1;
+    const float delta_t = 0.05;
     const float acc_meas_error = 0.1;
     const float rot_meas_error = 0.2;
-    const float Q_acc = 0.2;
-    const float Q_rot = 0.4;
+    const float Q_acc = 0.01;
+    const float Q_rot = 0.02;
 
     logger lg = logger(PLOT);
 
@@ -153,7 +153,7 @@ int main (int argc, char *argv[]){
 
     lg.log_header();
 
-    for (int i = 0; i < 101; i++){
+    for (int i = 0; i < 211; i++){
 
         time += delta_t;
         lg.log_time(time);
@@ -166,8 +166,8 @@ int main (int argc, char *argv[]){
         lg.log_result_x_P(x,P);
         
         // Calculate measurements
-        z = turn_measurement(calculate_actual_measurements(time), x(6));
-        // z = turn_measurement(calculate_erroneous_measurements(time, acc_meas_error, rot_meas_error), x(6);
+        // z = turn_measurement(calculate_actual_measurements(time), x(6));
+        z = turn_measurement(calculate_erroneous_measurements(time, acc_meas_error, rot_meas_error), x(6));
  
         // Correction step
         lg.log_correction();

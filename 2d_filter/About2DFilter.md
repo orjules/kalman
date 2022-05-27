@@ -68,7 +68,9 @@ Run `./2dKalmanFilter > ../../plotting/c_out.txt`.
 
 1. Having some sort of logging is very useful
 2. `Q` should not be omitted
-3. (something with rotation)
+3. Sin and cos were at the wrong point in the filter
+4. A higher sample rate makes the filter better
+5. Integrating the acceleration twice gives an imperfect result
 
 ### Logging
 
@@ -84,7 +86,7 @@ The logger also has levels to change between a DEBUG mode, where everything will
 
 As learned in [the 1d filter](../1d_acc_filter/About1dAcc.md), the `Q` matrix should not be omitted, in order to have a fast response to changes in the measurements.
 
-### Sin and Cos must be correct
+### Rotation transformation must be applied at the correct place
 
 After fixing the slow following of the measurements with `Q` I plotted the results.
 
@@ -103,4 +105,50 @@ Since everything up the moment of rotation looks fine, my guess was, that I had 
 
 After a lot of DEBUG prints and hand calculations I realized, that the filter currently turns the state by 90 degrees in each prediction step. This is because the `A` matrix does what it is supposed to and transform the local state values into global state values, which in this case is a rotation by 90 degrees.
 
-But this should not happen each prediction step, because it spins the state in circles rather the measurements from local space have to be transformed into global space.
+But this should not happen each prediction step, because it spins the state in circles rather the measurements from the local frame have to be transformed into the global frame.
+
+So I had to change the `A` to not include sin and cos. 
+The resulting `A` matrix can be seen as a Kalman filter in the global frame and not caring about rotation other that keeping track of it.
+
+![](images/2dBetterAMatrix.jpeg)
+
+For moving the rotation transformation to the measurement I defined a new matrix `C` and a new vector `y`.
+`y` is the raw sensor output and `C` is the transformation matrix from the local frame to the global frame. 
+
+![](images/2dCorrectedZ.jpeg)
+
+Lastly I redrew the overview of the filter to reflect all the changes that happened along the way.
+
+![](images/2dBetterBlockDiagram.jpeg)
+
+Here some plots from this improved filter:
+
+![](images/plot_rotspeed_perfect.png)
+![](images/plot_rot_perfect.png)
+![](images/plot_acc_perfect.png)
+![](images/plot_vel_perfect.png)
+![](images/plot_pos_perfect.png)
+
+### Higher sample rate is still imperfect
+
+After this I wanted to see how the filter would fare with some simulated noise in the measurements.
+To even get a smoothing effect I had to drop the values for `Q` to a tenth of the standard deviation of the noise. 
+
+It seems that the ration between `Q` and `R` is important. 
+When I messed around with taking the square of the standard deviation (to get the variance) and use this as values for `R` I was faced with no smoothing at all. 
+My assumption from this is that the values for `Q` should always be smaller that the values of `R`.
+
+I also tried to increase the sample rate of the measurements. 
+This had a noticeable effect on the error between perfect and estimated measurements.
+
+![](images/plot_rotspeed_lowrate.png)
+![](images/plot_rotspeed_highrate.png)
+![](images/plot_rot_lowrate.png)
+![](images/plot_rot_highrate.png)
+
+But still the double integration of the acceleration leads to an imperfect position estimate.
+An even higher sample rate might be helpful there.
+
+![](images/plot_acc_highrate.png)
+![](images/plot_vel_highrate.png)
+![](images/plot_pos_highrate.png)

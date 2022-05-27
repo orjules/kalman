@@ -17,7 +17,7 @@ plot(
     xlab = "Time in s",
     ylab = "Acceleration in m/s^2",
     main = "Kalman Filter simulation - Acceleration",
-    sub = sprintf("Error in measurement: %1.2f, Q for acceleration: %1.2f", data[1, "AccError"], data[1, "Q_acc"])
+    sub = sprintf("Error in measurement: %1.2f, Q for acceleration: %1.3f", data[1, "AccError"], data[1, "Q_acc"])
 )
 lines(data$Time, data$MeasAccY, col = "red")
 lines(data$Time, data$MeasAccX, col = "black")
