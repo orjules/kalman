@@ -13,6 +13,10 @@ x_k = x_k-1  +  Δt * v_k-1  +  0.5 * Δt^2 * a_k-1
 v_k = Δt * a_k-1
 ```
 
+The simulated measurement is only the acceleration.
+It is set to 1 for the first second, 0 for the second second and -1 for the third second.
+Thus the object should speed up for one second, keep it's velocity for one second and then decrease it's velocity to zero after the third second.
+
 ## Running the simulation
 
 First you need to build the c code.
@@ -21,7 +25,9 @@ For this run `cmake -S . -B target/` in the `c_code` directory.
 Afterwards go into the `target` directory and run `make`.
 Now you have an executable named `1dKalmanFilter`.
 
-Run `./1dKalmanFilter > ../../plotting/c_out.txt`.
+Check the code to make sure, that `LOGLEVEL log_level = PLOT` is set before running `./1dKalmanFilter > ../../plotting/c_out.txt`. When done correctly you can use the `1dKalman.r` to render a plot of the output.
+
+If you want to the see output in human readable form set `LOGLEVEL log_level = DEBUG` and run `./1dKalmanFilter`.
 
 ## Lessons learned
 
