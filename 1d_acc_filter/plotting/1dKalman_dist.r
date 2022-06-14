@@ -1,12 +1,12 @@
 data <- read.table(
-    "~/Documents/STAR/Kalman Filter/kalman/1d_acc_filter/plotting/c_out.txt",
+    "./1d_acc_filter/plotting/c_out.txt",
     header = TRUE,
     sep = ",",
     dec = ".")
 
 png(
     filename =
-    "~/Documents/STAR/Kalman Filter/kalman/1d_acc_filter/images/plot_dist.png"
+    "./1d_acc_filter/images/plot_dist2.png"
 )
 
 plot(
@@ -15,7 +15,7 @@ plot(
     col = "blue",
     type = "l",
     xlab = "Time in s",
-    ylab = "Acceleration in m/s^2",
+    ylab = "Distance in m",
     main = "Kalman Filter simulation - Distance",
     sub = sprintf("Error in measurement: %1.2f, Q for acceleration: %1.2f", data[1, "Meas_Err"], data[1, "Q_acc"])
 )

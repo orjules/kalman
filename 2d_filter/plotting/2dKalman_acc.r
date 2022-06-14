@@ -1,12 +1,12 @@
 data <- read.table(
-    "~/Documents/STAR/Kalman Filter/kalman/2d_filter/plotting/c_out.txt",
+    "./2d_filter/plotting/c_out.txt",
     header = TRUE,
     sep = ",",
     dec = ".")
 
 png(
     filename =
-    "~/Documents/STAR/Kalman Filter/kalman/2d_filter/images/plot_acc.png"
+    "./2d_filter/images/plot_acc.png"
 )
 
 plot(

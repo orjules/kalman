@@ -1,12 +1,12 @@
 data <- read.table(
-    "~/Documents/STAR/Kalman Filter/kalman/scalar_filter/plotting/rust_out.txt",
+    "./scalar_filter/plotting/rust_out.txt",
     header = TRUE,
     sep = ",",
     dec = ".")
 
 png(
     filename =
-    "~/Documents/STAR/Kalman Filter/kalman/scalar_filter/images/plot.png"
+    "./scalar_filter/images/plot.png"
 )
 
 plot(
